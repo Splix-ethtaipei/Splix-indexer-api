@@ -17,5 +17,8 @@ export class Item {
 
     @Column()
     hasPaid: boolean
+    
+    @Column({ nullable: true })
+    payer: string | null
 
 }
