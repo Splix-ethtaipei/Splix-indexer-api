@@ -8,6 +8,7 @@ import { Item } from './entity/Item';
 import { AppDataSource } from './data-source';
 import { groupApi } from './api/groupApi';
 import { scanReceiptApi } from './api/scanReceiptApi';
+import { relayTxApi } from './api/relayTxApi';
 
 const app = express();
 // app.use(cors({
@@ -28,6 +29,9 @@ AppDataSource.initialize()
         
         // Receipt scanning endpoint
         scanReceiptApi(app);
+        
+        // Relay transaction API for Circle attestations
+        relayTxApi(app);
 
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
