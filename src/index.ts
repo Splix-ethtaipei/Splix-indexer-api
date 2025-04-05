@@ -1,6 +1,11 @@
 import { AppDataSource } from "./data-source"
 import { User } from "./entity/User"
 
+
+import dotenv from "dotenv";
+
+dotenv.config();
+
 AppDataSource.initialize().then(async () => {
 
     console.log("Inserting a new user into the database...")
@@ -19,10 +24,7 @@ AppDataSource.initialize().then(async () => {
 
 }).catch(error => console.log(error))
 
-
-// import dotenv from "dotenv";
 // import { ethers } from "ethers";
-
 
 // export function main() {
 //     console.log("Hello");
@@ -36,9 +38,16 @@ AppDataSource.initialize().then(async () => {
 //     // save latest stored block number
 // }
 
-// dotenv.config();
 
 // const rpcUrl = process.env.RPC_URL;
 // const provider = new ethers.JsonRpcProvider(rpcUrl);
 
 // main();
+
+
+
+// event GroupCreated(uint256 indexed groupId, address indexed owner, uint256 itemCount);
+// event GroupEdited(uint256 indexed groupId, address indexed owner, uint256 itemCount);
+// event ItemCreated(uint256 indexed groupId, uint256 indexed itemId, string itemName, uint256 itemPrice);
+// event ItemEdited(uint256 indexed groupId, uint256 indexed itemId, string itemName, uint256 itemPrice);
+// event ItemsPaid(uint256 indexed groupId, address indexed payer, uint256[] itemIds, uint256 totalAmount);
