@@ -9,6 +9,9 @@ export class Item {
     @PrimaryColumn()
     groupId: number
 
+    @PrimaryColumn()
+    chainId: number
+
     @Column()
     name: string
 
@@ -17,7 +20,7 @@ export class Item {
 
     @Column()
     hasPaid: boolean
-    
+
     @Column({ nullable: true })
     payer: string | null
 

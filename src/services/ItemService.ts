@@ -56,7 +56,8 @@ export class ItemService {
         });
         const updateWhere = updateSet.where({
             id: itemPaid.id,
-            groupId: itemPaid.groupId
+            groupId: itemPaid.groupId,
+            chainId: itemPaid.chainId
         });
         await updateWhere.execute();
     }

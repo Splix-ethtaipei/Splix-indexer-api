@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { LatestBlock } from "./entity/LatestBlock";
 import { Group } from "./entity/Group";
 import { Item } from "./entity/Item";
+import { UserGroup } from "./entity/UserGroup";
 
 dotenv.config();
 
@@ -25,7 +26,15 @@ export const AppDataSource = new DataSource({
     database: dbName,
     synchronize: true,
     logging: false,
-    entities: [User, LatestBlock, Group, Item],
+    entities: [User, LatestBlock, Group, Item, UserGroup],
     migrations: [],
     subscribers: [],
+    ssl: process.env.NODE_ENV === 'production', // Only use SSL in production
+    ...(process.env.NODE_ENV === 'production' && {
+        extra: {
+            ssl: {
+                rejectUnauthorized: false,
+            },
+        },
+    }),
 })

@@ -7,6 +7,9 @@ export class LatestBlock {
     id: number
 
     @Column()
+    chainId: number
+
+    @Column()
     latestBlockNumber: number
 
 }
