@@ -1,12 +1,12 @@
 import { Entity, Column, PrimaryColumn } from "typeorm"
 
 @Entity()
-export class Group {
-
+export class Item {
+    // composite key (id, groupId)
     @PrimaryColumn()
     id: number
 
-    @Column()
+    @PrimaryColumn()
     groupId: number
 
     @Column()
@@ -14,5 +14,8 @@ export class Group {
 
     @Column()
     price: number
+
+    @Column()
+    hasPaid: boolean
 
 }

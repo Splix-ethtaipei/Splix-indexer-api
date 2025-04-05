@@ -1,4 +1,4 @@
-import { DataSource, Repository } from "typeorm";
+import { DataSource, EntityManager, Repository } from "typeorm";
 import { LatestBlock } from "../entity/LatestBlock";
 
 export class LatestBlockService {
@@ -13,7 +13,16 @@ export class LatestBlockService {
         return latestBlockNumber
     }
 
-    async upsertLaststBlockNumber(latestBlock: LatestBlock) {
+    async upsertLatestBlockNumber(latestBlock: LatestBlock) {
         await this.lastestBlockRepository.upsert(latestBlock, ["id"]);
+    }
+
+    async updateLatestBlockNumber(manager: EntityManager, latestBlock: LatestBlock) {
+        await manager.createQueryBuilder().update(LatestBlock)
+            .set({
+                latestBlockNumber: latestBlock.latestBlockNumber
+            }).where({
+                id: latestBlock.id
+            }).execute()
     }
 }
