@@ -7,9 +7,6 @@ import 'dotenv/config';
 // Authentication
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
-// hardcoded txHash
-const TX_HASH = '0xd16e6999ba55945caedf0cb4b950ae135883c0c765aff6c666daed1278ab669a';
-
 // Chain-specific Parameters
 const ETHEREUM_SEPOLIA_DOMAIN = '1'; // Source domain ID for Ethereum Sepolia testnet
 const AVALANCHE_FUJI_DOMAIN = '0'; // Destination domain ID for Avalanche Fuji testnet
@@ -138,7 +135,7 @@ export const relayTxApi = (app: express.Application): void => {
             
             // Start polling for attestation
             // const attestationData = await pollForAttestation(txHash);
-            const attestationData = await pollForAttestation(TX_HASH);
+            const attestationData = await pollForAttestation(txHash);
             
             if (!attestationData) {
                 res.status(404).json({ error: 'Failed to retrieve attestation after multiple attempts' });
