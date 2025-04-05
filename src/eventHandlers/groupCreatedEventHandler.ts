@@ -12,7 +12,8 @@ const eventInterface = new ethers.Interface(abi);
 
 export const handleGroupCreatedEvent = (log: Log): Group => {
     const decoded = eventInterface.parseLog(log);
-    const name = decoded.args.groupName;
+    const name = decoded.args.groupName.replace(/\x00/g, '');
+    console.log(`Group name: ${name}`)
     const groupId = decoded.args.groupId;
     const owner = decoded.args.owner;
     const normalizedOwner = owner.toLowerCase();

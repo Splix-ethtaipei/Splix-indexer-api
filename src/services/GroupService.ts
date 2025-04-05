@@ -12,6 +12,7 @@ export class GroupService {
     async insertGroup(manager: EntityManager, group: Group) {
         // await manager.save(group)
 
+        console.log(`group: ${group.name}`)
         const repo = manager.getRepository(Group);
         const queryBuilder = repo.createQueryBuilder();
         const insertQuery = queryBuilder.insert();
