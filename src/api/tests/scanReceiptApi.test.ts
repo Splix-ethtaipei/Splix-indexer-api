@@ -11,6 +11,7 @@ const imagePath = `./src/api/tests/IMG_1461.png`; // CHANGE THIS TO YOUR ACTUAL 
 // Read the image and convert to base64
 const imageBuffer = fs.readFileSync(imagePath);
 const base64Image = `${imageBuffer.toString('base64')}`;
+console.log(base64Image);
 
 // Test the API
 async function testScanReceipt() {

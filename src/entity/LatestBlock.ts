@@ -9,7 +9,7 @@ export class LatestBlock {
     @Column()
     chainId: number
 
-    @Column()
-    latestBlockNumber: number
+    @Column({type: 'bigint'})
+    latestBlockNumber: bigint
 
 }

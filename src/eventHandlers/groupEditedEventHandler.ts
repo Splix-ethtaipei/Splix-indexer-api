@@ -14,6 +14,7 @@ export const handleGroupEditedEvent = (log: Log): Group => {
     const decoded = eventInterface.parseLog(log);
     const groupId = decoded.args.groupId;
     const owner = decoded.args.owner;
+    const normalizedOwner = owner.toLowerCase();
     const itemCount = decoded.args.itemCount;
 
     return {
@@ -21,6 +22,7 @@ export const handleGroupEditedEvent = (log: Log): Group => {
         chainId: parseInt(CHAIN_ID),
         name: "",
         owner: owner,
+        normalizedOwner,
         itemCount: itemCount
     };
 }

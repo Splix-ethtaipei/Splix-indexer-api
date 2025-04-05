@@ -18,14 +18,14 @@ import { indexLimit, getIndexingMethod, IndexingMethod, CHAIN_ID, ethereumMainne
 
         if (CHAIN_ID === "1") {
             const provider = new ethers.JsonRpcProvider(ethereumMainnetRpcUrl);
-            await normalIndexing(provider,
-                AppDataSource,
-                latestBlockService,
-                groupService,
-                itemService,
-                indexLimit,
-                ethereumMainnetReceiptStorageContractAddress,
-                ethereumMainnetStartBlock);
+            // await normalIndexing(provider,
+            //     AppDataSource,
+            //     latestBlockService,
+            //     groupService,
+            //     itemService,
+            //     indexLimit,
+            //     ethereumMainnetReceiptStorageContractAddress,
+            //     ethereumMainnetStartBlock);
         } else if (CHAIN_ID === "11155111") {
             const provider = new ethers.JsonRpcProvider(ethereumSepoliaRpcUrl);
             await normalIndexing(provider,
@@ -39,14 +39,14 @@ import { indexLimit, getIndexingMethod, IndexingMethod, CHAIN_ID, ethereumMainne
         }
         else if (CHAIN_ID === "48898") {
             const provider = new ethers.JsonRpcProvider(zircuitTestnetRpcUrl);
-            await normalIndexing(provider,
-                AppDataSource,
-                latestBlockService,
-                groupService,
-                itemService,
-                indexLimit,
-                zircuitTestnetReceiptStorageContractAddress,
-                zircuitTestnetStartBlock);
+            // await normalIndexing(provider,
+            //     AppDataSource,
+            //     latestBlockService,
+            //     groupService,
+            //     itemService,
+            //     indexLimit,
+            //     zircuitTestnetReceiptStorageContractAddress,
+            //     zircuitTestnetStartBlock);
         }
     } catch (error) {
         console.error("Error:", error);

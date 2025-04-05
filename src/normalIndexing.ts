@@ -8,7 +8,7 @@ import { Group } from "./entity/Group";
 import { Item } from "./entity/Item";
 import { handleItemPaidEvent, ItemPaid } from "./eventHandlers/itemPaidEventHandler";
 import { handleGroupCreatedEvent } from "./eventHandlers/groupCreatedEventHandler";
-import { groupCreatedEventSignature, groupEditedEventSignature, itemCreatedEventSignature, itemEditedEventSignature, itemPaidEventSignature } from "./helper";
+import { CHAIN_ID, groupCreatedEventSignature, groupEditedEventSignature, itemCreatedEventSignature, itemEditedEventSignature, itemPaidEventSignature } from "./helper";
 import { handleGroupEditedEvent } from "./eventHandlers/groupEditedEventHandler";
 import { handleItemCreatedEvent } from "./eventHandlers/itemCreatedEventHandler";
 import { handleItemEditedEvent } from "./eventHandlers/itemEditedEventHandler";
@@ -27,29 +27,30 @@ export async function normalIndexing(
         // read latest onchain block
         const latestOnchainBlockNumber = await provider.getBlockNumber();
         // read latest stored block number
-        let latestBlock = await latestBlockService.getLatestBlockNumber();
+        let latestBlock = await latestBlockService.getLatestBlockNumber(parseInt(CHAIN_ID));
         if (!latestBlock) {
             latestBlock = new LatestBlock()
-            latestBlock.latestBlockNumber = startBlockSetted ?? latestOnchainBlockNumber
+            latestBlock.latestBlockNumber = BigInt(startBlockSetted ?? latestOnchainBlockNumber)
+            latestBlock.chainId = parseInt(CHAIN_ID)
             await latestBlockService.upsertLatestBlockNumber(latestBlock);
             continue;
         }
 
-        const latestStoredBlockNunber = latestBlock.latestBlockNumber;
-        const blockDiff = latestOnchainBlockNumber - latestStoredBlockNunber;
-        if (blockDiff === 0) {
+        const latestStoredBlockNunber = BigInt(latestBlock.latestBlockNumber);
+        const blockDiff = BigInt(latestOnchainBlockNumber) - BigInt(latestStoredBlockNunber);
+        if (blockDiff === BigInt(0)) {
             // caught up to latest
             continue;
         }
-        if (blockDiff < 0) {
+        if (blockDiff < BigInt(0)) {
             // there is a reorg, for hackathon we ignore this case
             // delete data and update
             continue;
         }
 
         const blockNumberToIndex = blockDiff > indexLimit ? indexLimit : blockDiff;
-        const startBlock = latestStoredBlockNunber + 1
-        const endBlock = startBlock + blockNumberToIndex - 1;
+        const startBlock = latestStoredBlockNunber + BigInt(1)
+        const endBlock = BigInt(startBlock) + BigInt(blockNumberToIndex) - BigInt(1);
         const logs = await provider.getLogs({
             fromBlock: startBlock,
             toBlock: endBlock,
@@ -129,19 +130,19 @@ export async function innerNormalIndexing(
 
     // read latest onchain block
     const latestOnchainBlockNumber = await provider.getBlockNumber();
-    let latestBlock = await latestBlockService.getLatestBlockNumber();
+    let latestBlock = await latestBlockService.getLatestBlockNumber(parseInt(CHAIN_ID));
 
     if (!latestBlock) {
         latestBlock = new LatestBlock()
-        latestBlock.latestBlockNumber = startBlockSetted ?? latestOnchainBlockNumber
+        latestBlock.latestBlockNumber = BigInt(startBlockSetted ?? latestOnchainBlockNumber)
         await latestBlockService.upsertLatestBlockNumber(latestBlock);
         return;
     }
 
     const latestStoredBlockNunber = latestBlock.latestBlockNumber;
 
-    const blockDiff = latestOnchainBlockNumber - latestStoredBlockNunber;
-    if (blockDiff === 0) {
+    const blockDiff = BigInt(latestOnchainBlockNumber) - latestStoredBlockNunber;
+    if (blockDiff === BigInt(0)) {
         // caught up to latest
         return;
     }
@@ -152,8 +153,8 @@ export async function innerNormalIndexing(
     }
 
     const blockNumberToIndex = blockDiff > indexLimit ? indexLimit : blockDiff;
-    const startBlock = latestStoredBlockNunber + 1
-    const endBlock = startBlock + blockNumberToIndex - 1;
+    const startBlock = latestStoredBlockNunber + BigInt(1)
+    const endBlock = startBlock + BigInt(blockNumberToIndex) - BigInt(1);
     const logs = await provider.getLogs({
         fromBlock: startBlock,
         toBlock: endBlock,

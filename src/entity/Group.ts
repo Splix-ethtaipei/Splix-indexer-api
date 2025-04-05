@@ -16,6 +16,9 @@ export class Group {
     owner: string
 
     @Column()
+    normalizedOwner: string
+    
+    @Column()
     itemCount: number
 
 }

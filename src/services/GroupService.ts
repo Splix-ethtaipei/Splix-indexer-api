@@ -40,19 +40,23 @@ export class GroupService {
 
     async getGroupsJoinedByUser(user: string): Promise<GroupByUserModel[]> {
         const normalizedUser = user.toLowerCase();
+        console.log(normalizedUser);
 
         const groups: GroupByUserModel[] = await
-            this.db.getRepository(UserGroup)
-                .createQueryBuilder("userGroup")
-                .innerJoin("group", "group", "group.id = userGroup.groupId AND group.chainId = userGroup.chainId")
+            this.db.getRepository(Group)
+                .createQueryBuilder("group")
+                .leftJoin(UserGroup, "userGroup", "group.id = userGroup.groupId AND group.chainId = userGroup.chainId")
                 .select([
                     "group.id as groupId",
                     "group.chainId as chainId",
                     "group.name as name",
                     "group.itemCount as itemCount",
-                    "group.owner as owner"
+                    "group.owner as owner",
                 ])
-                .where("userGroup.normalizedUser = :normalizedUser AND userGroup.hasJoined = true", { normalizedUser })
+                .where(
+                    "(userGroup.normalizedUser = :normalizedUser AND userGroup.hasJoined = true) OR LOWER(group.owner) = :normalizedUser",
+                    { normalizedUser }
+                )
                 .getRawMany();
 
         return groups;

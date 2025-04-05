@@ -8,9 +8,9 @@ export class LatestBlockService {
         this.lastestBlockRepository = db.getRepository(LatestBlock);
     }
 
-    async getLatestBlockNumber(): Promise<LatestBlock | null> {
+    async getLatestBlockNumber(chainId: number): Promise<LatestBlock | null> {
         const latestBlockNumber = await this.lastestBlockRepository.findOne({
-            where: {},
+            where: { chainId },
             order: { id: "DESC" }
         })
         return latestBlockNumber

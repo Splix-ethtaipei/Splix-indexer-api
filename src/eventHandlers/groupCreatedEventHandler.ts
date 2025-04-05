@@ -15,14 +15,16 @@ export const handleGroupCreatedEvent = (log: Log): Group => {
     const name = decoded.args.groupName;
     const groupId = decoded.args.groupId;
     const owner = decoded.args.owner;
+    const normalizedOwner = owner.toLowerCase();
     const itemCount = decoded.args.itemCount;
 
 
     return {
         id: groupId,
         chainId: parseInt(CHAIN_ID),
-        name: "",
+        name,
         owner: owner,
+        normalizedOwner,
         itemCount: itemCount
     };
 }
