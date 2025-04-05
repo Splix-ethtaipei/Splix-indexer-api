@@ -8,8 +8,12 @@ export class LatestBlockService {
         this.lastestBlockRepository = db.getRepository(LatestBlock);
     }
 
-    async getLatestBlockNumber(): Promise<LatestBlock> {
+    async getLatestBlockNumber(): Promise<LatestBlock | null> {
         const latestBlockNumber = await this.lastestBlockRepository.findOne({})
         return latestBlockNumber
+    }
+
+    async upsertLaststBlockNumber(latestBlock: LatestBlock) {
+        await this.lastestBlockRepository.upsert(latestBlock, ["id"]);
     }
 }

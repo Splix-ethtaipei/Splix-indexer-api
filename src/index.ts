@@ -26,28 +26,60 @@ dotenv.config();
 // }).catch(error => console.log(error))
 
 import { ethers, JsonRpcProvider } from "ethers";
+import { LatestBlockService } from "./services/LatestBlockService";
+import { LatestBlock } from "./entity/LatestBlock";
 
-export async function main(provider: JsonRpcProvider, db: DataSource) {
+export async function main(provider: JsonRpcProvider, latestBlockService: LatestBlockService, indexLimit: number) {
     console.log("Hello");
 
-    // read latest stored block number
-    // read latest onchain block
-    const latestOnchainBlockNumber = await provider.getBlockNumber();
-    // index n number of blocks (with a maximum block to index)
+    while (true) {
 
-    // save latest stored block number
+        // read latest onchain block
+        const latestOnchainBlockNumber = await provider.getBlockNumber();
+        // read latest stored block number
+        let latestBlock = await latestBlockService.getLatestBlockNumber();
+        if (!latestBlock) {
+            latestBlock = new LatestBlock()
+            latestBlock.latestBlockNumber = latestOnchainBlockNumber
+            await latestBlockService.upsertLaststBlockNumber(latestBlock);
+            continue;
+        }
+
+        const latestStoredBlockNunber = latestBlock.latestBlockNumber;
+
+        const blockDiff = latestOnchainBlockNumber - latestOnchainBlockNumber;
+        if (blockDiff === 0) {
+            // caught up to latest
+            continue;
+        }
+        if (blockDiff < 0) {
+            // there is a reorg, for hackathon we ignore this case
+            // delete data and update
+            continue;
+        }
+
+        const blockNumberToIndex = blockDiff > indexLimit ? indexLimit : blockDiff;
+
+
+
+        // const logs = await provider.getLogs();
+
+        // save latest stored block number
+    }
+
 }
 
 
 const rpcUrl = process.env.RPC_URL;
+const indexLimit = process.env.BLOCK_INDEX_LIMIT as unknown as number
 
 
 (async () => {
     try {
-
         const provider = new ethers.JsonRpcProvider(rpcUrl);
         const db = await AppDataSource.initialize();
-        await main(provider, db);
+        const latestBlockService = new LatestBlockService(db)
+        await main(provider, latestBlockService, indexLimit);
     } catch (error) {
         console.error("Error:", error);
     }
